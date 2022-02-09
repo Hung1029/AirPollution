@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_isInstallingWaveXRPlugin: 1
   m_isInstallingOpenVRXRPlugin: 0
-  m_ignoreKeys: []
+  m_ignoreKeys:
+  - GPUSkinning
+  - ColorSpace
