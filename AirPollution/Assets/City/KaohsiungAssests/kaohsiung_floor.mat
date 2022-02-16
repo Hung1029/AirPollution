@@ -109,7 +109,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _Source: 0
     - _SpecularHighlights: 1
-    - _SpecularIntensity: 0.2
+    - _SpecularIntensity: 0
     - _SpreadDetailMap: 0
     - _SpreadTransparentMap: 0
     - _SrcBlend: 1
