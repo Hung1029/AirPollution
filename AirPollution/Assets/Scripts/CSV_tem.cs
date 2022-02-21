@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class CSV
+public class CSV_tem
 {
-    static CSV csv;
+    static CSV_tem csv;
     public List<string[]> m_ArrayData;
     public string[] colArray;
-   
 
-    public static CSV GetInstance()
+
+    public static CSV_tem GetInstance()
     {
         if (csv == null)
         {
-            csv = new CSV();
+            csv = new CSV_tem();
         }
         return csv;
     }
 
-    public string getString(int row, int col) 
+    public string getString(int row, int col)
     {
         return m_ArrayData[row][col];
     }
@@ -43,18 +43,18 @@ public class CSV
             //Debug.Log("MY COL IS:"+m_ArrayData[i][col]);
             //Debug.Log("MY ARRAY SIZE IS:" + m_ArrayData.Count);
             colArray[i] = m_ArrayData[i][col];
-           // Debug.Log("MY COL IS:" + colArray[i]);
+            // Debug.Log("MY COL IS:" + colArray[i]);
         }
         return colArray;
     }
 
 
-    private CSV() 
-    { 
+    private CSV_tem()
+    {
         m_ArrayData = new List<string[]>();
     }
 
-    public void loadFile(string path, string fileName) 
+    public void loadFile(string path, string fileName)
     {
         m_ArrayData.Clear(); //初始化數據
         StreamReader sr = null; //保存讀取文件後的原始數據
@@ -63,15 +63,17 @@ public class CSV
             sr = File.OpenText(path + "//" + fileName);
             Debug.Log("file finded!");
         }
-        catch {
+        catch
+        {
             Debug.Log("file don't finded!");
             return;
         }
         string line; //暫存每一行數據
-        while ((line = sr.ReadLine()) != null) {
+        while ((line = sr.ReadLine()) != null)
+        {
             m_ArrayData.Add(line.Split(','));
         }
         sr.Close();
         sr.Dispose();
-        }
+    }
 }

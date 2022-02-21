@@ -9,6 +9,12 @@ using LitJson;
 
 public class GetKaohsiungData : MonoBehaviour
 {
+    public enum DataType { 
+        NowData,HistoryData,Default
+    }
+    public DataType datatype;
+
+    
     public TextMesh outputArea;
     public TextMesh outputTem;
     public TextMesh outputRain;
@@ -58,18 +64,39 @@ public class GetKaohsiungData : MonoBehaviour
         outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
         outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
         outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
+    }
 
+    void Update()
+    {
+        switch (datatype) 
+        {
+            case DataType.NowData:
+                print("NowType");
+                StartGetNowData();
+                break;
+            case DataType.HistoryData:
+                print("HistoryType");
+                
+                break;
+            default:
+                print("DataType Default");
+                break;
+        }
+    }
+
+    void StartGetNowData() {
         StartCoroutine(GetData_Coroutine());
         StartCoroutine(GetWea_Coroutine());
         StartCoroutine(GetTem_Coroutine());
         StartCoroutine(GetNowTime_Coroutine());
+        datatype = DataType.Default;
     }
 
     // void GetData() => StartCoroutine(GetData_Coroutine());
 
     IEnumerator GetData_Coroutine()
     {
-        outputArea.text = "Loading...";
+        //outputArea.text = "Loading...";
         string uri = String.Format(uri_data, limit, api, county, sitename);
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -124,7 +151,7 @@ public class GetKaohsiungData : MonoBehaviour
 
     IEnumerator GetWea_Coroutine()
     {
-        outputRain.text = "Loading...";
+       // outputRain.text = "Loading...";
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri_rain))
         {
@@ -158,7 +185,7 @@ public class GetKaohsiungData : MonoBehaviour
 
     IEnumerator GetTem_Coroutine()
     {
-        outputTem.text = "Loading...";
+       // outputTem.text = "Loading...";
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri_tem))
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PS_SunStarManager : MonoBehaviour
 {
     public float latitude = 23.4558622f;  // 北回歸線車站
@@ -21,7 +22,7 @@ public class PS_SunStarManager : MonoBehaviour
     private Vector3 _sunlightrot;
     private Light _sunlightComponent;
 
-    public float _fyear = 2017;
+    public float _fyear = 2022;
     public float _fmonth = 1;
     public float _fday = 2;
     public float _fhour = 0.05f;
@@ -40,10 +41,31 @@ public class PS_SunStarManager : MonoBehaviour
 
     // 產生夜空所需要的資料
     public bool North_Pole = false;
+    public int dateRow, dateCol;
+
+    public TextMesh outputArea;
+    public TextMesh outputRain;
+    public TextMesh outputTem;
+    public TextMesh outputDate;
 
     // Use this for initialization
     public void Start()
     {
+        switch (FileController.Instance.city)
+        {
+            case FileController.City.Taipei:
+                latitude = 25.0267598f;
+                longitude = 121.522771f;
+                break;
+            case FileController.City.Kaohsiung:
+                latitude = 22.6260221f;
+                longitude = 120.2953845f;
+                outputArea = GameObject.Find("AirDataPm").GetComponent<TextMesh>();
+                outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
+                outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
+                outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
+                break;
+        }
         months_slider = GameObject.Find("months_slider").GetComponent<Slider>();
         hours_slider = GameObject.Find("hours_slider").GetComponent<Slider>();
         if (!sunObject)
@@ -60,8 +82,9 @@ public class PS_SunStarManager : MonoBehaviour
 
         if (!sun_light) sun_light = GameObject.Find("sun light");
         //Adds a listener to the main slider and invokes a method when the value changes.
-        months_slider.onValueChanged.AddListener(delegate { MonthValueChangeCheck(); });
-        hours_slider.onValueChanged.AddListener(delegate { HourValueChangeCheck(); });
+        months_slider.onValueChanged.AddListener(delegate { MonthValueChangeCheck(); SetDate(); });
+        hours_slider.onValueChanged.AddListener(delegate { HourValueChangeCheck(); SetDate(); });
+
 
         // 設定太陽在不同角度上的顏色
         _sunColor[0] = new Color32(19, 24, 98, 80);      // 0 度
@@ -200,6 +223,9 @@ public class PS_SunStarManager : MonoBehaviour
     {
         _fmonth = (int)months_slider.value / 14 + 1;
         _fday = ((int)(months_slider.value - (_fmonth - 1) * 14) + 1) * 2;
+
+        //CSV.GetInstance().getString(((int)_fmonth),((int)_fhour));
+
         CalculateSunPosition(_fyear, _fmonth, _fday, _fhour - 8.0f, latitude, longitude, ref _sunpos);
         if (sunObject) sunObject.transform.localPosition = _sunpos;
         sun_light.transform.Rotate(_sunlightrot);
@@ -266,6 +292,64 @@ public class PS_SunStarManager : MonoBehaviour
                 }
             }
         }*/
+    }
+
+    public void SetDate() {
+
+        if (((int)_fmonth) == 1)
+        {
+            dateRow = 1 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 2)
+        {
+            dateRow = 32 + ((int)_fday - 1);
+
+        }
+        else if (((int)_fmonth) == 3)
+        {
+            dateRow = 60 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 4)
+        {
+            dateRow = 91 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 5)
+        {
+            dateRow = 121 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 6)
+        {
+            dateRow = 153 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 7)
+        {
+            dateRow = 182 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 8)
+        {
+            dateRow = 213 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 9)
+        {
+            dateRow = 244 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 10)
+        {
+            dateRow = 274 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 11)
+        {
+            dateRow = 305 + ((int)_fday - 1);
+        }
+        else if (((int)_fmonth) == 12)
+        {
+            dateRow = 335 + ((int)_fday - 1);
+        }
+        dateCol = ((int)_fhour) + 3;
+        outputArea.text = CSV.GetInstance().getString(dateRow, dateCol);
+        outputRain.text = CSV_rh.GetInstance().getString(dateRow, dateCol) + "%";
+        outputTem.text = CSV_tem.GetInstance().getString(dateRow, dateCol) + "℃";
+
     }
     public void HourValueChangeCheck()
     {
@@ -407,6 +491,10 @@ public class PS_SunStarManager : MonoBehaviour
     void Update()
     {
         AutoPlay();
+        if (months_play || hours_play)
+        {
+            outputDate.text = "";
+        }
     }
 
     void AutoPlay()
