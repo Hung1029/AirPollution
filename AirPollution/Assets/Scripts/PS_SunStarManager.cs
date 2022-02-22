@@ -25,7 +25,7 @@ public class PS_SunStarManager : MonoBehaviour
     public float _fyear = 2022;
     public float _fmonth = 1;
     public float _fday = 2;
-    public float _fhour = 0.05f;
+    public float _fhour = 9f;
 
     private Color32[] _sunColor = new Color32[20];  // 儲存 0 到 90 度角的太陽顏色
     private Color32 _curSunColor;
@@ -43,12 +43,26 @@ public class PS_SunStarManager : MonoBehaviour
     public bool North_Pole = false;
     public int dateRow, dateCol;
 
+    // 數值呈現
     public TextMesh outputArea;
     public TextMesh outputRain;
     public TextMesh outputTem;
     public TextMesh outputDate;
 
+    public ParticleSystem ps;
+    public static int nowState = 20;
+
+   // static PS_SunStarManager sunstarmanager;
     // Use this for initialization
+    //public static PS_SunStarManager GetInstance()
+    //{
+    //    if (sunstarmanager == null)
+    //    {
+    //        sunstarmanager = new PS_SunStarManager();
+    //    }
+    //    return sunstarmanager;
+    //}
+
     public void Start()
     {
         switch (FileController.Instance.city)
@@ -56,6 +70,10 @@ public class PS_SunStarManager : MonoBehaviour
             case FileController.City.Taipei:
                 latitude = 25.0267598f;
                 longitude = 121.522771f;
+                outputArea = GameObject.Find("AirDataPm").GetComponent<TextMesh>();
+                outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
+                outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
+                outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
                 break;
             case FileController.City.Kaohsiung:
                 latitude = 22.6260221f;
@@ -64,6 +82,8 @@ public class PS_SunStarManager : MonoBehaviour
                 outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
                 outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
                 outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
+                ps = GameObject.Find("AirPullution").GetComponent<ParticleSystem>();
+                //airParticle = GameObject.Find("AirPullution").GetComponent<ParticleSystem>();
                 break;
         }
         months_slider = GameObject.Find("months_slider").GetComponent<Slider>();
@@ -346,9 +366,37 @@ public class PS_SunStarManager : MonoBehaviour
             dateRow = 335 + ((int)_fday - 1);
         }
         dateCol = ((int)_fhour) + 3;
+       SetParticle();
         outputArea.text = CSV.GetInstance().getString(dateRow, dateCol);
         outputRain.text = CSV_rh.GetInstance().getString(dateRow, dateCol) + "%";
         outputTem.text = CSV_tem.GetInstance().getString(dateRow, dateCol) + "℃";
+    }
+
+    public void SetParticle() {
+        nowState = CSV.GetInstance().getInt(dateRow, dateCol);
+        //Debug.Log("HERERERERE" + nowState);
+        if (nowState < 10) {
+            ps.maxParticles = 50;
+            ps.startLifetime = 5;
+           
+        } else if(nowState < 20)
+        {
+            ps.maxParticles = 100;
+            ps.startLifetime = 10;
+            
+        }
+        else if (nowState < 30)
+        {
+            ps.maxParticles = 200;
+            ps.startLifetime = 20;
+            
+        }
+        else if (nowState > 40)
+        {
+            ps.maxParticles = 500;
+            ps.startLifetime = 30;
+
+        }
 
     }
     public void HourValueChangeCheck()
@@ -491,6 +539,7 @@ public class PS_SunStarManager : MonoBehaviour
     void Update()
     {
         AutoPlay();
+        
         if (months_play || hours_play)
         {
             outputDate.text = "";
