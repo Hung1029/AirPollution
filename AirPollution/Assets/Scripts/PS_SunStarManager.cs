@@ -50,19 +50,11 @@ public class PS_SunStarManager : MonoBehaviour
     public TextMesh outputDate;
 
     public ParticleSystem ps;
+    public GameObject target;
     public static int nowState = 20;
+    private Renderer mesh,mesh2,mesh3;
 
-   // static PS_SunStarManager sunstarmanager;
     // Use this for initialization
-    //public static PS_SunStarManager GetInstance()
-    //{
-    //    if (sunstarmanager == null)
-    //    {
-    //        sunstarmanager = new PS_SunStarManager();
-    //    }
-    //    return sunstarmanager;
-    //}
-
     public void Start()
     {
         switch (FileController.Instance.city)
@@ -74,6 +66,10 @@ public class PS_SunStarManager : MonoBehaviour
                 outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
                 outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
                 outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
+                
+                mesh = GameObject.Find("AirPullution").GetComponent<ParticleSystem>().GetComponent<Renderer>();
+                mesh2 = GameObject.Find("AirPullution2").GetComponent<ParticleSystem>().GetComponent<Renderer>();
+                mesh3 = GameObject.Find("AirPullution3").GetComponent<ParticleSystem>().GetComponent<Renderer>();
                 break;
             case FileController.City.Kaohsiung:
                 latitude = 22.6260221f;
@@ -82,8 +78,11 @@ public class PS_SunStarManager : MonoBehaviour
                 outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
                 outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
                 outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
-                ps = GameObject.Find("AirPullution").GetComponent<ParticleSystem>();
-                //airParticle = GameObject.Find("AirPullution").GetComponent<ParticleSystem>();
+               
+                mesh = GameObject.Find("AirPullution").GetComponent<ParticleSystem>().GetComponent<Renderer>();
+                mesh2 = GameObject.Find("AirPullution2").GetComponent<ParticleSystem>().GetComponent<Renderer>();
+                mesh3 = GameObject.Find("AirPullution3").GetComponent<ParticleSystem>().GetComponent<Renderer>();
+                
                 break;
         }
         months_slider = GameObject.Find("months_slider").GetComponent<Slider>();
@@ -376,27 +375,57 @@ public class PS_SunStarManager : MonoBehaviour
         nowState = CSV.GetInstance().getInt(dateRow, dateCol);
         //Debug.Log("HERERERERE" + nowState);
         if (nowState < 10) {
-            ps.maxParticles = 50;
-            ps.startLifetime = 5;
-           
-        } else if(nowState < 20)
+            for (float t = 0f; t < 2.0f; t += Time.deltaTime)
+            {
+                mesh.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                mesh2.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                mesh3.material.color = Color.Lerp( Color.clear, Color.white, t / 2.0f);
+                RenderSettings.fog = true;
+                RenderSettings.fogDensity = 0.01f;
+            }
+            //target.SetActive(false);
+            //ps.maxParticles = 50;
+            //ps.startLifetime = 5;
+
+        } else if(nowState < 30)
         {
-            ps.maxParticles = 100;
-            ps.startLifetime = 10;
-            
-        }
-        else if (nowState < 30)
-        {
-            ps.maxParticles = 200;
-            ps.startLifetime = 20;
-            
-        }
-        else if (nowState > 40)
-        {
-            ps.maxParticles = 500;
-            ps.startLifetime = 30;
+            for (float t = 0f; t < 2.0f; t += Time.deltaTime)
+            {
+                mesh.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                mesh2.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
+                mesh3.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                RenderSettings.fog = true;
+                RenderSettings.fogDensity = 0.02f;
+            }
+            // target.SetActive(false);
+            //ps.maxParticles = 100;
+            //ps.startLifetime = 10;
 
         }
+        else if (nowState > 30)
+        {
+            for (float t = 0f; t < 2.0f; t += Time.deltaTime)
+            {
+                mesh.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
+                mesh2.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
+                mesh3.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                RenderSettings.fog = true;
+                RenderSettings.fogDensity = 0.03f;
+            }
+
+            // target.SetActive(true);
+            //ps.maxParticles = 200;
+            //ps.startLifetime = 20;
+
+        }
+        //else if (nowState > 40)
+        //{
+           
+        //    // target.SetActive(true);
+        //    //ps.maxParticles = 500;
+        //    //ps.startLifetime = 30;
+
+        //}
 
     }
     public void HourValueChangeCheck()

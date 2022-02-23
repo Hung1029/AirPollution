@@ -9,7 +9,13 @@ using LitJson;
 //using Newtonsoft.Json;
 
 public class GetTaipeiData : MonoBehaviour
-{
+{  
+    public enum DataType
+    {
+        NowData, HistoryData, Default
+    }
+    public DataType datatype;
+
     public TextMesh outputArea;
     public TextMesh outputTem;
     public TextMesh outputRain;
@@ -55,22 +61,44 @@ public class GetTaipeiData : MonoBehaviour
 
     void Start()
     {
-        outputArea = GameObject.Find("AIrDataPm").GetComponent<TextMesh>();
-        outputTem = GameObject.Find("AIrDataTem").GetComponent<TextMesh>();
-        outputRain = GameObject.Find("AIrDataWet").GetComponent<TextMesh>();
+        outputArea = GameObject.Find("AirDataPm").GetComponent<TextMesh>();
+        outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
+        outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
         outputDate = GameObject.Find("AirDataTime").GetComponent<TextMesh>();
+    }
 
+    void Update()
+    {
+        switch (datatype)
+        {
+            case DataType.NowData:
+                print("NowType");
+                StartGetNowData();
+                break;
+            case DataType.HistoryData:
+                print("HistoryType");
+
+                break;
+            default:
+                print("DataType Default");
+                break;
+        }
+    }
+
+    void StartGetNowData()
+    {
         StartCoroutine(GetData_Coroutine());
         StartCoroutine(GetWea_Coroutine());
         StartCoroutine(GetTem_Coroutine());
         StartCoroutine(GetNowTime_Coroutine());
+        datatype = DataType.Default;
     }
 
-   // void GetData() => StartCoroutine(GetData_Coroutine());
+    // void GetData() => StartCoroutine(GetData_Coroutine());
 
     IEnumerator GetData_Coroutine()
     {
-        outputArea.text = "Loading...";
+        //outputArea.text = "Loading...";
         string uri = String.Format(uri_data, limit, api, county, sitename);
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri))
@@ -114,10 +142,10 @@ public class GetTaipeiData : MonoBehaviour
                     //    "狀態: " + json[0].Status + Environment.NewLine +
                     //    "空氣品質指標: " + json[0].AQI + Environment.NewLine +
                     //    "細懸浮微粒(μg/m3): " + json[0].PM2_5 + Environment.NewLine +
-                     json[0].PM2_5_AVG;
-                        //"緯度: " + json[0].Longitude + Environment.NewLine +
-                        //"經度: " + json[0].Latitude + Environment.NewLine +
-                        //"資料發布時間: " + json[0].DataCreationDate;
+                    json[0].PM2_5_AVG;
+                    //"緯度: " + json[0].Longitude + Environment.NewLine +
+                    //"經度: " + json[0].Latitude + Environment.NewLine +
+                    //"資料發布時間: " + json[0].DataCreationDate;
                 }
             }
         }
@@ -125,7 +153,7 @@ public class GetTaipeiData : MonoBehaviour
 
     IEnumerator GetWea_Coroutine()
     {
-        outputRain.text = "Loading...";
+        // outputRain.text = "Loading...";
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri_rain))
         {
@@ -146,9 +174,9 @@ public class GetTaipeiData : MonoBehaviour
                     Debug.Log("Clear");
 
                     json_data.Add(new RAIN_DATA()
-                        {
-                            Rain = jsonData["records"]["location"][0]["weatherElement"][0]["time"][0]["parameter"]["parameterName"].ToString(),
-                        });
+                    {
+                        Rain = jsonData["records"]["location"][0]["weatherElement"][0]["time"][0]["parameter"]["parameterName"].ToString(),
+                    });
 
                     Debug.Log("降雨機率:" + json_data[0].Rain);
                     outputRain.text = json_data[0].Rain + "%";
@@ -159,7 +187,7 @@ public class GetTaipeiData : MonoBehaviour
 
     IEnumerator GetTem_Coroutine()
     {
-        outputTem.text = "Loading...";
+        // outputTem.text = "Loading...";
 
         using (UnityWebRequest request = UnityWebRequest.Get(uri_tem))
         {
