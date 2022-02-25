@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,11 +55,21 @@ public class PS_SunStarManager : MonoBehaviour
     public static int nowState = 20;
     private Renderer mesh,mesh2,mesh3;
 
+    public bool isHistory = false;
+    public Toggle toggle;
+    //public enum DataType
+    //{
+    //    NowData, HistoryData, Default
+    //}
+
+
     // Use this for initialization
     public void Start()
     {
+       
         switch (FileController.Instance.city)
         {
+            
             case FileController.City.Taipei:
                 latitude = 25.0267598f;
                 longitude = 121.522771f;
@@ -72,6 +83,7 @@ public class PS_SunStarManager : MonoBehaviour
                 mesh3 = GameObject.Find("AirPullution3").GetComponent<ParticleSystem>().GetComponent<Renderer>();
                 break;
             case FileController.City.Kaohsiung:
+                GetKaohsiungData.Instance.StartGetNowData();
                 latitude = 22.6260221f;
                 longitude = 120.2953845f;
                 outputArea = GameObject.Find("AirDataPm").GetComponent<TextMesh>();
@@ -567,6 +579,7 @@ public class PS_SunStarManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SetStatue();
         AutoPlay();
         
         if (months_play || hours_play)
@@ -574,29 +587,42 @@ public class PS_SunStarManager : MonoBehaviour
             outputDate.text = "";
         }
     }
-
+    void SetStatue() {
+        switch (GetKaohsiungData.Instance.datatype) {
+            case GetKaohsiungData.DataType.HistoryData:
+                isHistory = true;
+                break;
+            case GetKaohsiungData.DataType.NowData:
+                isHistory = false;
+                break;
+        }
+        //if (GetKaohsiungData.Instance.datatype == DataType.HistoryData) { }
+    }
     void AutoPlay()
     {
-        if (months_play)
+        if (isHistory)
         {
-            months_slider.value += Time.deltaTime * 10;
-            if (months_slider.value >= 167) months_slider.value = 0f;
-            if (hours_playButton) hours_playButton.interactable = false;
-        }
-        else
-        {
-            if (hours_playButton) hours_playButton.interactable = true;
-        }
+            if (months_play)
+            {
+                months_slider.value += Time.deltaTime * 10;
+                if (months_slider.value >= 167) months_slider.value = 0f;
+                if (hours_playButton) hours_playButton.interactable = false;
+            }
+            else
+            {
+                if (hours_playButton) hours_playButton.interactable = true;
+            }
 
-        if (hours_play)
-        {
-            hours_slider.value += Time.deltaTime * 1f;
-            if (hours_slider.value >= 23.8) hours_slider.value = 0.05f;
-            if (months_playButton) months_playButton.interactable = false;
-        }
-        else
-        {
-            if (months_playButton) months_playButton.interactable = true;
+            if (hours_play)
+            {
+                hours_slider.value += Time.deltaTime * 1f;
+                if (hours_slider.value >= 23.8) hours_slider.value = 0.05f;
+                if (months_playButton) months_playButton.interactable = false;
+            }
+            else
+            {
+                if (months_playButton) months_playButton.interactable = true;
+            }
         }
     }
 
@@ -610,5 +636,22 @@ public class PS_SunStarManager : MonoBehaviour
     {
         hours_play = !hours_play;
         months_slider.interactable = !months_slider.interactable;
+    }
+    public void Toggle_Changed(bool newValue)
+    {
+        isHistory = newValue;
+        Debug.Log("NOWWW" + newValue);
+        if (newValue)
+        {
+            GetKaohsiungData.Instance.StartGetNowData();
+            outputDate.text = DateTime.Now.Month.ToString() + "/" + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Year.ToString();
+            isHistory = false;
+
+        }
+        else {
+            isHistory = true;
+            months_play = false;
+            hours_play = false;
+        }
     }
 }

@@ -9,7 +9,8 @@ using LitJson;
 
 public class GetKaohsiungData : MonoBehaviour
 {
-    public enum DataType { 
+    public static GetKaohsiungData Instance { get; private set; }
+    public enum  DataType { 
         NowData,HistoryData,Default
     }
     public DataType datatype;
@@ -55,11 +56,15 @@ public class GetKaohsiungData : MonoBehaviour
         public string Max_Tem;
         public string Min_Tem;
     }
-
+    private void Awake()
+    {
+        Instance = this;
+    }
 
 
     void Start()
     {
+        datatype = DataType.Default;
         outputArea = GameObject.Find("AirDataPm").GetComponent<TextMesh>();
         outputTem = GameObject.Find("AirDataTem").GetComponent<TextMesh>();
         outputRain = GameObject.Find("AirDataWet").GetComponent<TextMesh>();
@@ -74,17 +79,18 @@ public class GetKaohsiungData : MonoBehaviour
                 print("NowType");
                 StartGetNowData();
                 break;
+
             case DataType.HistoryData:
-                print("HistoryType");
-                
+                print("HistoryType"); 
                 break;
-            default:
+
+            case DataType.Default:
                 print("DataType Default");
                 break;
         }
     }
 
-    void StartGetNowData() {
+      public void StartGetNowData() {
         StartCoroutine(GetData_Coroutine());
         StartCoroutine(GetWea_Coroutine());
         StartCoroutine(GetTem_Coroutine());
@@ -221,6 +227,7 @@ public class GetKaohsiungData : MonoBehaviour
     {
         outputDate.text = DateTime.Now.Month.ToString() +"/"+ DateTime.Now.Day.ToString()+"/"+ DateTime.Now.Year.ToString();
         
+
         yield return null;
     }
 }
