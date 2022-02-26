@@ -9,6 +9,8 @@ public class CSV_rh
     public List<string[]> m_ArrayData;
     public string[] colArray;
 
+    public List<string[]> data;
+    public List<string[]> data2;
 
     public static CSV_rh GetInstance()
     {
@@ -21,28 +23,28 @@ public class CSV_rh
 
     public string getString(int row, int col)
     {
-        return m_ArrayData[row][col];
+        return data2[row][col];
     }
 
     public int getInt(int row, int col)
     {
-        return int.Parse(m_ArrayData[row][col]);
+        return int.Parse(data2[row][col]);
     }
 
     public string[] GetRow(int row)
     {
-        return m_ArrayData[row];
+        return data2[row];
     }
 
     public string[] GetCol(int col)
     {
-        colArray = new string[m_ArrayData.Count];
-        Debug.Log("DO YOU HERE:" + col);
-        for (int i = 0; i < m_ArrayData.Count; i++)
+        colArray = new string[data[0].Length];
+        // Debug.Log("DO YOU HERE:" + col);
+        for (int i = 0; i < 367; i++)
         {
             //Debug.Log("MY COL IS:"+m_ArrayData[i][col]);
             //Debug.Log("MY ARRAY SIZE IS:" + m_ArrayData.Count);
-            colArray[i] = m_ArrayData[i][col];
+            colArray[i] = data2[i][col];
             // Debug.Log("MY COL IS:" + colArray[i]);
         }
         return colArray;
@@ -52,28 +54,47 @@ public class CSV_rh
     private CSV_rh()
     {
         m_ArrayData = new List<string[]>();
-    }
+        data2 = new List<string[]>();
+        data = new List<string[]>();
 
-    public void loadFile(string path, string fileName)
+    }
+    public void loadFile(string fileName)
     {
-        m_ArrayData.Clear(); //初始化數據
-        StreamReader sr = null; //保存讀取文件後的原始數據
-        try
+        data.Clear();
+        TextAsset questdata = Resources.Load<TextAsset>(fileName);
+        data.Add(questdata.text.Split('\n'));
+
+
+        // Debug.Log("OOOOOOOOO" + data[0][0]);
+
+        for (int i = 0; i < data[0].Length; i++)
         {
-            sr = File.OpenText(path + "//" + fileName);
-            Debug.Log("file finded!");
+            for (int j = 0; j < 27; j++)
+            {
+                data2.Add(data[0][j].ToString().Split(','));
+                Debug.Log(data2[i][j]);
+            }
         }
-        catch
-        {
-            Debug.Log("file don't finded!");
-            return;
-        }
-        string line; //暫存每一行數據
-        while ((line = sr.ReadLine()) != null)
-        {
-            m_ArrayData.Add(line.Split(','));
-        }
-        sr.Close();
-        sr.Dispose();
+
+
+        //for (int i = 0; i < data.Count; i++)
+        //{
+        //    data2.Add(data[i].ToString().Split(','));
+        //}
+
+
+
+        //for (int i = 0; i < 27; i++)
+        //{
+        //    for (int j = 0; j < 366; i++)
+        //    {
+        //        string line2 = data[i].ToString();
+        //        data2[i][j] = line2.Split(',').ToString();
+        //        Debug.Log("WOWOOW" + data2[i][j]);
+        //        data2[i][j] = data[0][i].Split(',');
+        //    }
+        //    Debug.Log("LIne");
+        //}
+        //Debug.Log("WHO ARE　YOU");
     }
 }

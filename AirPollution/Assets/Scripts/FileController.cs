@@ -22,15 +22,22 @@ public class FileController : MonoBehaviour
     {
         switch (city) {
             case City.Taipei:
-                CSV.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_pm26.csv");
-                CSV_rh.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_rh.csv");
-                CSV_tem.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_temp.csv");
+                CSV.GetInstance().loadFile("taipei_pm26");
+                CSV_rh.GetInstance().loadFile("taipei_rh");
+                CSV_tem.GetInstance().loadFile("taipei_temp");
+                //CSV.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_pm26.csv");
+                // CSV_rh.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_rh.csv");
+                // CSV_tem.GetInstance().loadFile(Application.dataPath + "/Csv", "taipei_temp.csv");
 
                 break;
             case City.Kaohsiung:
-                CSV.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_pm25.csv");
-                CSV_rh.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_rh.csv");
-                CSV_tem.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_temp.csv");
+                //CSV.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_pm25.csv");
+                //CSV_rh.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_rh.csv");
+               // CSV_tem.GetInstance().loadFile(Application.dataPath + "/Csv", "kaohsiung_temp.csv");
+                CSV.GetInstance().loadFile("kaohsiung_pm25");
+                CSV_rh.GetInstance().loadFile("kaohsiung_rh");
+                CSV_tem.GetInstance().loadFile("kaohsiung_temp");
+
                 break;
         }
        

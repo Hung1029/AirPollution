@@ -9,7 +9,9 @@ public class CSV
     public List<string[]> m_ArrayData;
     public string[] colArray;
 
-   
+    public List<string[]> data;
+    public List<string[]> data2;
+
 
     public static CSV GetInstance()
     {
@@ -20,94 +22,112 @@ public class CSV
         return csv;
     }
 
-    public string getString(int row, int col) 
+    public string getString(int row, int col)
     {
-        return m_ArrayData[row][col];
+        return data2[row][col];
     }
 
     public int getInt(int row, int col)
     {
-        return int.Parse(m_ArrayData[row][col]);
+        return int.Parse(data2[row][col]);
     }
 
     public string[] GetRow(int row)
     {
-        return m_ArrayData[row];
+       // Debug.Log("FOUND" + data2[row]);
+        return data2[row];
     }
 
     public string[] GetCol(int col)
     {
-        colArray = new string[m_ArrayData.Count];
-       // Debug.Log("DO YOU HERE:" + col);
-        for (int i = 0; i < m_ArrayData.Count; i++)
+        colArray = new string[data[0].Length];
+        // Debug.Log("DO YOU HERE:" + col);
+        for (int i = 0; i < 367; i++)
         {
             //Debug.Log("MY COL IS:"+m_ArrayData[i][col]);
             //Debug.Log("MY ARRAY SIZE IS:" + m_ArrayData.Count);
-            colArray[i] = m_ArrayData[i][col];
-           // Debug.Log("MY COL IS:" + colArray[i]);
+            colArray[i] = data2[i][col];
+            // Debug.Log("MY COL IS:" + colArray[i]);
         }
         return colArray;
     }
 
- 
 
-    private CSV() 
-    { 
-        m_ArrayData = new List<string[]>();
-    }
 
-    public void loadFile(string path, string fileName)
+    private CSV()
     {
-        m_ArrayData.Clear(); //初始化數據
-        StreamReader sr = null; //保存讀取文件後的原始數據
-        try
-        {
-            sr = File.OpenText(path + "//" + fileName);
-            Debug.Log("file finded!");
-        }
-        catch
-        {
-            Debug.Log("file don't finded!");     
-            return;
-        }
-        string line; //暫存每一行數據
-        while ((line = sr.ReadLine()) != null)
-        {
-            m_ArrayData.Add(line.Split(','));
-        }
-        sr.Close();
-        sr.Dispose();
+        m_ArrayData = new List<string[]>();
+        data2 = new List<string[]>();
+        data = new List<string[]>();
+
     }
 
-    //public string[][] m_arrayData;
-
-    //public void LoadFile(string path, string fileName)
+    //public void loadFile(string path, string fileName)
     //{
-    //    讀取新文件前保證之前的數據為空
-    //    m_arrayData = new string[0][];
-    //    string fillPath = path + "/" + fileName;
-
-    //    解析每一行的數據
-    //      string[] lineArray;
+    //    m_ArrayData.Clear(); //初始化數據
+    //    StreamReader sr = null; //保存讀取文件後的原始數據
     //    try
     //    {
-    //        注意編碼方式，這裡用的是Windows系統自定義的編碼方式Encoding.Default，其實也就是GB2312（簡體中文），編碼不對應的話解析出來很可能是亂碼
-    //       lineArray = File.ReadAllLines(fillPath, Encoding.Default);
+    //        sr = File.OpenText(path + "//" + fileName);
     //        Debug.Log("file finded!");
     //    }
     //    catch
     //    {
-    //        Debug.Log("file do not find!");
+    //        Debug.Log("file don't finded!");     
     //        return;
     //    }
-
-    //    m_arrayData = new string[lineArray.Length][];
-    //    for (int i = 0; i < lineArray.Length; i++)
+    //    string line; //暫存每一行數據
+    //    while ((line = sr.ReadLine()) != null)
     //    {
-    //        CSV格式的文件採用英文逗號作為分隔符
-    //        m_arrayData[i] = lineArray[i].Split(',');
+    //        m_ArrayData.Add(line.Split(','));
     //    }
+    //    sr.Close();
+    //    sr.Dispose();
     //}
+
+    int line;
+
+
+
+    public void loadFile(string fileName)
+    {
+        data.Clear();
+        TextAsset questdata = Resources.Load<TextAsset>(fileName);
+        data.Add(questdata.text.Split('\n'));
+
+
+       // Debug.Log("OOOOOOOOO" + data[0][0]);
+
+        for (int i = 0; i < data[0].Length; i++)
+        {
+            for (int j = 0; j < 27; j++)
+            {
+                data2.Add(data[0][j].ToString().Split(','));
+                Debug.Log(data2[i][j]);
+            }
+        }
+
+
+        //for (int i = 0; i < data.Count; i++)
+        //{
+        //    data2.Add(data[i].ToString().Split(','));
+        //}
+
+
+
+        //for (int i = 0; i < 27; i++)
+        //{
+        //    for (int j = 0; j < 366; i++)
+        //    {
+        //        string line2 = data[i].ToString();
+        //        data2[i][j] = line2.Split(',').ToString();
+        //        Debug.Log("WOWOOW" + data2[i][j]);
+        //        data2[i][j] = data[0][i].Split(',');
+        //    }
+        //    Debug.Log("LIne");
+        //}
+        //Debug.Log("WHO ARE　YOU");
+    }
 
 
 }
