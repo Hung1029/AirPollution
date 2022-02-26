@@ -6,10 +6,12 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System;
 using LitJson;
+
 //using Newtonsoft.Json;
 
 public class GetTaipeiData : MonoBehaviour
-{  
+{
+    public static GetTaipeiData Instance { get; private set; }
     public enum DataType
     {
         NowData, HistoryData, Default
@@ -57,7 +59,10 @@ public class GetTaipeiData : MonoBehaviour
         public string Min_Tem;
     }
 
-
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -85,7 +90,7 @@ public class GetTaipeiData : MonoBehaviour
         }
     }
 
-    void StartGetNowData()
+    public void StartGetNowData()
     {
         StartCoroutine(GetData_Coroutine());
         StartCoroutine(GetWea_Coroutine());
