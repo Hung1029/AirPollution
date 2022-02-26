@@ -66,6 +66,7 @@ public class PS_SunStarManager : MonoBehaviour
     // Use this for initialization
     public void Start()
     {
+        _fhour = DateTime.Now.Hour;
         isHistory = true;
 
         switch (FileController.Instance.city)

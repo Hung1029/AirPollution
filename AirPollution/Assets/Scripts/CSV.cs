@@ -8,6 +8,7 @@ public class CSV
     static CSV csv;
     public List<string[]> m_ArrayData;
     public string[] colArray;
+
    
 
     public static CSV GetInstance()
@@ -37,7 +38,7 @@ public class CSV
     public string[] GetCol(int col)
     {
         colArray = new string[m_ArrayData.Count];
-        Debug.Log("DO YOU HERE:" + col);
+       // Debug.Log("DO YOU HERE:" + col);
         for (int i = 0; i < m_ArrayData.Count; i++)
         {
             //Debug.Log("MY COL IS:"+m_ArrayData[i][col]);
@@ -48,6 +49,7 @@ public class CSV
         return colArray;
     }
 
+ 
 
     private CSV() 
     { 
@@ -65,7 +67,7 @@ public class CSV
         }
         catch
         {
-            Debug.Log("file don't finded!");
+            Debug.Log("file don't finded!");     
             return;
         }
         string line; //暫存每一行數據

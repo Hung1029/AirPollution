@@ -67,6 +67,7 @@ public class PS_Sun_Taipei : MonoBehaviour
     // Use this for initialization
     public void Start()
     {
+        _fhour = DateTime.Now.Hour;
         isHistory = true;
 
         switch (FileController.Instance.city)

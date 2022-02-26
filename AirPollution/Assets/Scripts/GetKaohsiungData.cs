@@ -226,7 +226,7 @@ public class GetKaohsiungData : MonoBehaviour
     IEnumerator GetNowTime_Coroutine()
     {
         outputDate.text = DateTime.Now.Month.ToString() +"/"+ DateTime.Now.Day.ToString()+"/"+ DateTime.Now.Year.ToString();
-        
+        //_fhour.value = DateTime.Now.Hour;
 
         yield return null;
     }
