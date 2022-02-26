@@ -55,7 +55,7 @@ public class PS_SunStarManager : MonoBehaviour
     public static int nowState = 20;
     private Renderer mesh,mesh2,mesh3;
 
-    public bool isHistory = false;
+    public bool isHistory;
     public Toggle toggle;
     //public enum DataType
     //{
@@ -66,7 +66,8 @@ public class PS_SunStarManager : MonoBehaviour
     // Use this for initialization
     public void Start()
     {
-       
+        isHistory = true;
+
         switch (FileController.Instance.city)
         {
             
@@ -637,21 +638,21 @@ public class PS_SunStarManager : MonoBehaviour
         hours_play = !hours_play;
         months_slider.interactable = !months_slider.interactable;
     }
-    public void Toggle_Changed(bool newValue)
+    public void Toggle_Changed()
     {
-        isHistory = newValue;
-        Debug.Log("NOWWW" + newValue);
-        if (newValue)
+        Debug.Log("NOWWW" + toggle.isOn);
+        if (toggle.isOn)
         {
             GetKaohsiungData.Instance.StartGetNowData();
             outputDate.text = DateTime.Now.Month.ToString() + "/" + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Year.ToString();
             isHistory = false;
-
+            months_playButton.interactable = false;
+            hours_playButton.interactable = false;
         }
         else {
             isHistory = true;
-            months_play = false;
-            hours_play = false;
+            months_playButton.interactable = true;
+            hours_playButton.interactable = true;
         }
     }
 }

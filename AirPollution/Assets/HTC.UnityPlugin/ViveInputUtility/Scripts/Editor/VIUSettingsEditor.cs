@@ -1,4 +1,4 @@
-﻿//========= Copyright 2016-2021, HTC Corporation. All rights reserved. ===========
+﻿//========= Copyright 2016-2022, HTC Corporation. All rights reserved. ===========
 
 using HTC.UnityPlugin.Utility;
 using HTC.UnityPlugin.VRModuleManagement;
@@ -144,6 +144,7 @@ namespace HTC.UnityPlugin.Vive
                     OpenVR,
                     Daydream,
                     MockHMD,
+                    WindowsMR,
                 };
 
                 s_projectSettingAsset = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset")[0]);
@@ -341,8 +342,10 @@ namespace HTC.UnityPlugin.Vive
 #if UNITY_2018_1_OR_NEWER
             private static bool s_wasPreparing;
             private static bool m_wasAdded;
+            private static bool s_wasRemoved;
             private static ListRequest m_listRequest;
             private static AddRequest m_addRequest;
+            private static RemoveRequest m_removeRequest;
             private static string s_fallbackIdentifier;
 
             public static bool isPreparingList
@@ -411,6 +414,37 @@ namespace HTC.UnityPlugin.Vive
                 }
             }
 
+            public static bool isRemovingFromList
+            {
+                get
+                {
+                    if (m_removeRequest == null) { return s_wasRemoved = false; }
+
+                    switch (m_removeRequest.Status)
+                    {
+                        case StatusCode.InProgress:
+                            return s_wasRemoved = true;
+                        case StatusCode.Failure:
+                            if (!s_wasRemoved)
+                            {
+                                var request = m_removeRequest;
+                                m_removeRequest = null;
+                                Debug.LogError("Something wrong when removing package from list. error:" + m_removeRequest.Error.errorCode + "(" + m_removeRequest.Error.message + ")");
+                            }
+                            break;
+                        case StatusCode.Success:
+                            if (!s_wasRemoved)
+                            {
+                                m_removeRequest = null;
+                                ResetPackageList();
+                            }
+                            break;
+                    }
+
+                    return s_wasRemoved = false;
+                }
+            }
+
             public static void PreparePackageList()
             {
                 if (m_listRequest != null) { return; }
@@ -442,6 +476,13 @@ namespace HTC.UnityPlugin.Vive
                 s_fallbackIdentifier = fallbackIdentifier;
             }
 
+            public static void RemovePackage(string identifier)
+            {
+                Debug.Assert(m_removeRequest == null);
+
+                m_removeRequest = Client.Remove(identifier);
+            }
+
             public static PackageCollection GetPackageList()
             {
                 if (m_listRequest == null || m_listRequest.Result == null)
@@ -458,6 +499,7 @@ namespace HTC.UnityPlugin.Vive
             public static void ResetPackageList() { }
             public static bool IsPackageInList(string name) { return false; }
             public static void AddToPackageList(string identifier, string fallbackIdentifier = null) { }
+            public static void RemovePackage(string identifier) { }
 #endif
         }
 
@@ -478,6 +520,8 @@ namespace HTC.UnityPlugin.Vive
 
         public const string URL_VIU_GITHUB_RELEASE_PAGE = "https://github.com/ViveSoftware/ViveInputUtility-Unity/releases";
         public const string OPENXR_PLUGIN_PACKAGE_NAME = "com.unity.xr.openxr";
+        public const string OPENXR_PLUGIN_LOADER_NAME = "Open XR Loader";
+        public const string OPENXR_PLUGIN_LOADER_TYPE = "OpenXRLoader";
 
         private const string DEFAULT_ASSET_PATH = "Assets/VIUSettings/Resources/VIUSettings.asset";
 
@@ -634,7 +678,12 @@ namespace HTC.UnityPlugin.Vive
 #if UNITY_2018_1_OR_NEWER
             if (PackageManagerHelper.isAddingToList)
             {
-                EditorGUILayout.LabelField("Installing Packages...");
+                EditorGUILayout.LabelField("Installing packages...");
+                return;
+            }
+            if (PackageManagerHelper.isRemovingFromList)
+            {
+                EditorGUILayout.LabelField("Removing packages...");
                 return;
             }
             PackageManagerHelper.PreparePackageList();
@@ -870,7 +919,7 @@ namespace HTC.UnityPlugin.Vive
                 VRModuleManagerEditor.UpdateScriptingDefineSymbols();
             }
 
-#if VIU_STEAMVR_2_0_0_OR_NEWER
+#if VIU_STEAMVR_2_0_0_OR_NEWER && UNITY_STANDALONE
             if (false && GUILayout.Button("Create Partial Action Set", GUILayout.ExpandWidth(false)))
             {
                 var actionFile = new SteamVRExtension.VIUSteamVRActionFile()
