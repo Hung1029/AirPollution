@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: d6b8e797354aca741809619356b535a6, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 1d1c1150dad745847bde78db81295901, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -2544,7 +2544,7 @@ PrefabInstance:
     - target: {fileID: 7555192394176267828, guid: 1eb18370bca99cf4995401748fb2a1ca,
         type: 3}
       propertyPath: m_Text
-      value: 2/16/2022
+      value: 3/17/2022
       objectReference: {fileID: 0}
     - target: {fileID: 7555192394176267828, guid: 1eb18370bca99cf4995401748fb2a1ca,
         type: 3}
@@ -4428,7 +4428,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -5585,7 +5585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifestate: 0
-  lifetype: 2
+  lifetype: 1
   target: {fileID: 850484298}
   floatColorChangeSpeed: 0.5
   defaultColor: {r: 0, g: 0, b: 0, a: 0}
@@ -6699,7 +6699,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 297ff0dc14dcc5d479c023741e426a40,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 43.47
+      value: 41.45
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 297ff0dc14dcc5d479c023741e426a40,
         type: 3}
@@ -6709,7 +6709,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 297ff0dc14dcc5d479c023741e426a40,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.57
+      value: -51.19
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 297ff0dc14dcc5d479c023741e426a40,
         type: 3}
@@ -11931,6 +11931,11 @@ PrefabInstance:
       propertyPath: m_Color.rgba
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 121404358471296673, guid: 571fe64da4f04d54689d677c6d38c2b0,
+        type: 3}
+      propertyPath: m_Text
+      value: "23 \u2103"
+      objectReference: {fileID: 0}
     - target: {fileID: 121404358471296679, guid: 571fe64da4f04d54689d677c6d38c2b0,
         type: 3}
       propertyPath: m_Name
@@ -15561,6 +15566,13 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CharacterSize
       value: 0.0019
+      objectReference: {fileID: 0}
+    - target: {fileID: 4147953922445053410, guid: 4a3a3f59d98a18448857e415a8060b2c,
+        type: 3}
+      propertyPath: m_Text
+      value: '67%
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 4147953922445053412, guid: 4a3a3f59d98a18448857e415a8060b2c,
         type: 3}

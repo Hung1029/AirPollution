@@ -29,6 +29,7 @@ public class GetKaohsiungData : MonoBehaviour
     public string county = "高雄市";
     public string sitename = "前金";
     int i = 0;
+    public int nowState;
 
     string uri_rain = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-D355501B-3D14-481D-AAAD-90B786822049&format=JSON&locationName=%E9%AB%98%E9%9B%84%E5%B8%82&elementName=PoP&sort=time";
     string uri_tem = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-D355501B-3D14-481D-AAAD-90B786822049&format=JSON&locationName=%E9%AB%98%E9%9B%84%E5%B8%82&elementName=MinT,MaxT&sort=time";
@@ -109,13 +110,16 @@ public class GetKaohsiungData : MonoBehaviour
         {
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError)
-                outputArea.text = request.error;
+            { 
+            // outputArea.text = request.error;
+            }
+            
             else
             {
                 JsonData jsonData = JsonMapper.ToObject(request.downloadHandler.text);
                 if (jsonData["records"].Count == 0)
                 {
-                    outputArea.text = "Sorry, there is no result for your request!";
+                    // outputArea.text = "Sorry, there is no result for your request!";
                 }
                 else
                 {
@@ -141,6 +145,7 @@ public class GetKaohsiungData : MonoBehaviour
 
 
                     Debug.Log(json[0].SiteName);
+                    int.TryParse(json[0].PM2_5_AVG, out nowState);
                     outputArea.text = //"測站名稱: " + json[0].SiteName + Environment.NewLine +
                     //    "縣市: " + json[0].County + Environment.NewLine +
                     //    "狀態: " + json[0].Status + Environment.NewLine +
@@ -163,13 +168,15 @@ public class GetKaohsiungData : MonoBehaviour
         {
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError)
-                outputArea.text = request.error;
+            {
+                // outputArea.text = request.error;
+            }
             else
             {
                 JsonData jsonData = JsonMapper.ToObject(request.downloadHandler.text);
                 if (jsonData["records"].Count == 0)
                 {
-                    outputRain.text = "empty";
+                   // outputRain.text = "empty";
                 }
                 else
                 {
@@ -197,13 +204,15 @@ public class GetKaohsiungData : MonoBehaviour
         {
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError)
-                outputArea.text = request.error;
+            {
+                // outputArea.text = request.error;
+            }
             else
             {
                 JsonData jsonData = JsonMapper.ToObject(request.downloadHandler.text);
                 if (jsonData["records"].Count == 0)
                 {
-                    outputTem.text = "empty";
+                  //  outputTem.text = "empty";
                 }
                 else
                 {

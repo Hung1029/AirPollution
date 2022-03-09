@@ -37,7 +37,15 @@ public class LifeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lifestate = PS_SunStarManager.nowState;
+        switch (FileController.Instance.city) {
+            case FileController.City.Taipei:
+                lifestate = PS_Sun_Taipei.nowState;
+                break;
+            case FileController.City.Kaohsiung:
+                lifestate = PS_SunStarManager.nowState;
+                break;
+        }
+        
 
         if (lifestate < 30) {
             lifetype = LifeType.Fadein;

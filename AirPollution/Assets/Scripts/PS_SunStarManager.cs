@@ -42,7 +42,7 @@ public class PS_SunStarManager : MonoBehaviour
 
     // 產生夜空所需要的資料
     public bool North_Pole = false;
-    public int dateRow, dateCol;
+    public int dateRow=1, dateCol=1;
 
     // 數值呈現
     public TextMesh outputArea;
@@ -67,7 +67,11 @@ public class PS_SunStarManager : MonoBehaviour
     public void Start()
     {
         _fhour = DateTime.Now.Hour;
-        isHistory = true;
+        isHistory = false;
+        months_playButton.interactable = false;
+        hours_playButton.interactable = false;
+        months_slider.interactable = false;
+        hours_slider.interactable = false;
 
         switch (FileController.Instance.city)
         {
@@ -407,7 +411,7 @@ public class PS_SunStarManager : MonoBehaviour
             {
                 mesh.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
                 mesh2.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
-                mesh3.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                mesh3.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
                 RenderSettings.fog = true;
                 RenderSettings.fogDensity = 0.02f;
             }
@@ -422,7 +426,7 @@ public class PS_SunStarManager : MonoBehaviour
             {
                 mesh.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
                 mesh2.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
-                mesh3.material.color = Color.Lerp(Color.white, Color.clear, t / 2.0f);
+                mesh3.material.color = Color.Lerp(Color.clear, Color.white, t / 2.0f);
                 RenderSettings.fog = true;
                 RenderSettings.fogDensity = 0.03f;
             }
@@ -606,7 +610,7 @@ public class PS_SunStarManager : MonoBehaviour
         {
             if (months_play)
             {
-                months_slider.value += Time.deltaTime * 10;
+                months_slider.value += Time.deltaTime * 3f;
                 if (months_slider.value >= 167) months_slider.value = 0f;
                 if (hours_playButton) hours_playButton.interactable = false;
             }
@@ -645,15 +649,25 @@ public class PS_SunStarManager : MonoBehaviour
         if (toggle.isOn)
         {
             GetKaohsiungData.Instance.StartGetNowData();
+            nowState = GetKaohsiungData.Instance.nowState;
             outputDate.text = DateTime.Now.Month.ToString() + "/" + DateTime.Now.Day.ToString() + "/" + DateTime.Now.Year.ToString();
             isHistory = false;
             months_playButton.interactable = false;
             hours_playButton.interactable = false;
+            months_slider.interactable = false;
+            hours_slider.interactable = false;
         }
         else {
             isHistory = true;
             months_playButton.interactable = true;
             hours_playButton.interactable = true;
+            months_slider.interactable = true;
+            hours_slider.interactable = true;
+            outputDate.text = "";
+            SetDate();
+            outputArea.text = CSV.GetInstance().getString(dateRow, dateCol);
+            outputRain.text = CSV_rh.GetInstance().getString(dateRow, dateCol) + "%";
+            outputTem.text = CSV_tem.GetInstance().getString(dateRow, dateCol) + "℃";
         }
     }
 }
