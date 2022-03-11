@@ -666,6 +666,8 @@ public class PS_Sun_Taipei : MonoBehaviour
             hours_playButton.interactable = false;
             months_slider.interactable = false;
             hours_slider.interactable = false;
+            months_slider.value = DateTime.Now.Month;
+            hours_slider.value = DateTime.Now.Hour;
         }
         else
         {
