@@ -23,9 +23,11 @@ public class GetKaohsiungData : MonoBehaviour
 
     //List<string> inside = new List<string> { "新北市", "臺北市", "桃園市", "新竹市", "臺中市", "臺南市", "高雄市", "花蓮縣" };
     //public Dropdown dropdownCounty;
-    string uri_data = "https://data.epa.gov.tw/api/v1/aqx_p_488?format=json&limit={0}&api_key={1}&filters=County,EQ,{2}|SiteName,EQ,{3}|Pollutant,EQ,細懸浮微粒";
+    //https://data.epa.gov.tw/api/v2/aqx_p_432?format=json&limit={0}&api_key={1}&filters=county,EQ,{2}|sitename,EQ,{3}
+    string uri_data = "https://data.epa.gov.tw/api/v2/aqx_p_432?format=json&limit={0}&api_key={1}&filters=County,EQ,{2}|SiteName,EQ,{3}";
     string limit = "1";
-    string api = "9be7b239-557b-4c10-9775-78cadfc555e9";
+      // old api = 9be7b239-557b-4c10-9775-78cadfc555e9
+    string api = "e01f2840-11a6-497b-9685-9a4e7c40a9f1";
     public string county = "高雄市";
     public string sitename = "前金";
     int i = 0;
@@ -131,15 +133,15 @@ public class GetKaohsiungData : MonoBehaviour
                     {
                         json.Add(new DATA()
                         {
-                            SiteName = jsonData["records"][i]["SiteName"].ToString(),
-                            County = jsonData["records"][i]["County"].ToString(),
-                            Status = jsonData["records"][i]["Status"].ToString(),
-                            AQI = jsonData["records"][i]["AQI"].ToString(),
-                            PM2_5 = jsonData["records"][i]["PM2.5"].ToString(),
-                            PM2_5_AVG = jsonData["records"][i]["PM2.5_AVG"].ToString(),
-                            DataCreationDate = jsonData["records"][i]["DataCreationDate"].ToString(),
-                            Longitude = jsonData["records"][i]["Longitude"].ToString(),
-                            Latitude = jsonData["records"][i]["Latitude"].ToString()
+                            SiteName = jsonData["records"][i]["sitename"].ToString(),
+                            County = jsonData["records"][i]["county"].ToString(),
+                            Status = jsonData["records"][i]["status"].ToString(),
+                            AQI = jsonData["records"][i]["aqi"].ToString(),
+                            PM2_5 = jsonData["records"][i]["pm2.5"].ToString(),
+                            PM2_5_AVG = jsonData["records"][i]["pm2.5_avg"].ToString(),
+                            DataCreationDate = jsonData["records"][i]["publishtime"].ToString(),
+                            Longitude = jsonData["records"][i]["longitude"].ToString(),
+                            Latitude = jsonData["records"][i]["latitude"].ToString()
                         });
                     }
 
